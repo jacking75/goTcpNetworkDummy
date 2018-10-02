@@ -1,10 +1,12 @@
 package dummy
 
 import (
-	"../utils"
 	"time"
 	"net"
+
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 // 네트워크 관련 에커 코드 선언

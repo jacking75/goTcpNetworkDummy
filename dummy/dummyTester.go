@@ -1,9 +1,11 @@
 package dummy
 
 import (
-	"../utils"
 	"time"
+
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 func Start() {

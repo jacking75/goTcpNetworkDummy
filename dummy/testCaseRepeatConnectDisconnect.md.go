@@ -2,9 +2,10 @@
 package dummy
 
 import (
-	"../utils"
 	"time"
 	"sync/atomic"
+
+	"goTcpNetworkDummy/utils"
 )
 
 

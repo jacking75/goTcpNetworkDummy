@@ -7,10 +7,9 @@ import (
 	"math/rand"
 
 	"github.com/kyokomi/lottery"
-
-	"../utils"
-
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 func (tester *dummyManager) start_Echo() {
@@ -123,6 +122,8 @@ func (tester *dummyManager) _selectPacket(config dummytestConfig, lot lottery.Lo
 	var sendData []byte
 
 	switch testCase {
+	case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
+		fallthrough
 	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
 		fallthrough
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT:

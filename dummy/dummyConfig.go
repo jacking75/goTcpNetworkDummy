@@ -1,12 +1,13 @@
 package dummy
 
 import (
-	"github.com/joho/godotenv"
 	"os"
 	"strconv"
 
-	"../utils"
+	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 // 더미 테스트에 사용할 설정 정보

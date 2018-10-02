@@ -2,9 +2,11 @@
 package dummy
 
 import (
-	"../utils"
 	"sync/atomic"
+
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 

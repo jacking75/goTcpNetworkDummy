@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./dummy"
-	"./utils"
+	"goTcpNetworkDummy/dummy"
+	"goTcpNetworkDummy/utils"
 )
 
 func main() {

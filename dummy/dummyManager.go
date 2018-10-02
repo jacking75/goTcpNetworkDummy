@@ -3,12 +3,13 @@ package dummy
 import (
 	"net"
 	"sync/atomic"
-
-	"../utils"
 	"time"
 	"math/rand"
 	"fmt"
+
 	"go.uber.org/zap"
+
+	"goTcpNetworkDummy/utils"
 )
 
 // 더미
