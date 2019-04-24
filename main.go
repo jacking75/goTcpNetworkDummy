@@ -2,14 +2,15 @@ package main
 
 import (
 	"goTcpNetworkDummy/dummy"
-	"goTcpNetworkDummy/utils"
+	. "goTcpNetworkDummy/utils"
 )
 
 func main() {
-	utils.Init_Log()
-	utils.Logger.Info("----------- dummy Client Test -----------")
+	Init_Log()
 
-	dummy.Start();
+	LOG_INFO("----------- dummy Client Test -----------")
+
+	dummy.Start()
 }
 
 

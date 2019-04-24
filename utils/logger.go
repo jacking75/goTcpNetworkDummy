@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"go.uber.org/zap/zapcore"
 	"io/ioutil"
 	"encoding/json"
 
@@ -10,6 +11,10 @@ import (
 var (
 	Logger, _ = zap.NewProduction()
 )
+
+var LOG_DEBUG func(msg string, fields ...zapcore.Field)
+var LOG_INFO func(msg string, fields ...zapcore.Field)
+var LOG_ERROR func(msg string, fields ...zapcore.Field)
 
 
 func Init_Log() {
@@ -25,4 +30,8 @@ func Init_Log() {
 	}
 
 	Logger, _ = myConfig.Build()
+
+	LOG_DEBUG = Logger.Debug
+	LOG_INFO = Logger.Info
+	LOG_ERROR = Logger.Error
 }

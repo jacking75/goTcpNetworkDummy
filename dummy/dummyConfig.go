@@ -1,10 +1,7 @@
 package dummy
 
 import (
-	"os"
-	"strconv"
-
-	"github.com/joho/godotenv"
+	"flag"
 	"go.uber.org/zap"
 
 	"goTcpNetworkDummy/utils"
@@ -28,22 +25,19 @@ type dummytestConfig struct {
 }
 
 func loadConfig() dummytestConfig {
-	err := godotenv.Load()
-	if err != nil {
-		utils.Logger.Error("Error loading .env file")
-	}
-
 	config := dummytestConfig{}
-	config.remoteAddress = os.Getenv("remoteAddress")
-	config.dummyCount, _ = strconv.Atoi(os.Getenv("dummyCount"))
-	config.testCase, _ = strconv.Atoi(os.Getenv("testCase"))
-	config.testCountPerDummy, _ = strconv.ParseInt(os.Getenv("testCountPerDummy"), 10, 64)
-	config.testTimeSecondPerDummy, _ = strconv.ParseInt(os.Getenv("testTimeSecondPerDummy"), 10, 64)
-	config.sendDataKindCount, _ = strconv.Atoi(os.Getenv("sendDataKindCount"))
-	config.minSendData, _ = strconv.Atoi(os.Getenv("minSendData"))
-	config.maxSendData, _ = strconv.Atoi(os.Getenv("maxSendData"))
-	config.echoConnectDisconnectRandomPer, _ = strconv.Atoi(os.Getenv("echoConnectDisconnectRandomPer"))
-	config.echoConnectDisconnectServerRandomPer, _ = strconv.Atoi(os.Getenv("echoConnectDisconnectServerRandomPer"))
+	flag.StringVar(&config.remoteAddress,"c_remoteAddress", "127.0.0.1:11021", "string flag")
+	flag.IntVar(&config.dummyCount,"c_dummyCount", 0, "int flag")
+	flag.IntVar(&config.testCase,"c_testCase", 0, "int flag")
+	flag.Int64Var(&config.testCountPerDummy,"c_testCountPerDummy", 0, "int flag")
+	flag.Int64Var(&config.testTimeSecondPerDummy,"c_testTimeSecondPerDummy", 0, "int flag")
+	flag.IntVar(&config.sendDataKindCount,"c_sendDataKindCount", 0, "int flag")
+	flag.IntVar(&config.minSendData,"c_minSendData", 0, "int flag")
+	flag.IntVar(&config.maxSendData,"c_maxSendData", 0, "int flag")
+	flag.IntVar(&config.echoConnectDisconnectRandomPer,"c_echoConnectDisconnectRandomPer", 0, "int flag")
+	flag.IntVar(&config.echoConnectDisconnectServerRandomPer,"c_echoConnectDisconnectServerRandomPer", 0, "int flag")
+
+	flag.Parse()
 
 	return config
 }
