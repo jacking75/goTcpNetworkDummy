@@ -1,18 +1,16 @@
 package utils
 
 import (
-	"go.uber.org/zap"
 	"io/ioutil"
 	"encoding/json"
+
+	"go.uber.org/zap"
 )
 
 var (
 	Logger, _ = zap.NewProduction()
 )
 
-/*var (
-	Logger = logrus.New()
-)*/
 
 func Init_Log() {
 

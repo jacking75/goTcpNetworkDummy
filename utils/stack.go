@@ -2,9 +2,10 @@ package utils
 
 import (
 	"runtime"
+	"fmt"
+
 	"github.com/davecgh/go-spew/spew"
 	"go.uber.org/zap"
-	"fmt"
 )
 
 func PrintPanicStack(extras ...interface{}) {
