@@ -101,29 +101,33 @@ func _randomBytes(minSize int, maxSize int) []byte {
 		size = maxSize
 	}
 
-	b := make([]byte, size)
-	binary.LittleEndian.PutUint16(b[0:2], (uint16)(size))
-	binary.LittleEndian.PutUint16(b[2:4], 101)
+	var packetId uint16 = 101
+	packet, headerSize := _makePacketData(packetId, uint16(size))
 
-	for n:=4; n < size; n++{
-		b[n] = letterBytes[rand.Intn(len(letterBytes))]
+	for n:=headerSize; n < size; n++{
+		packet[n] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	return b
+	return packet
 }
 
 func _requestDisconnecPacketBytes(packetId int16, totalPacketSize int16) []byte {
-	b := make([]byte, totalPacketSize)
-	binary.LittleEndian.PutUint16(b[0:2], (uint16)(totalPacketSize))
-	binary.LittleEndian.PutUint16(b[2:4], (uint16)(packetId))
-
-
-	bodySize := (int)(totalPacketSize - 4)
+	packet, headerSize := _makePacketData(uint16(packetId), uint16(totalPacketSize))
+	bodySize := (int)(totalPacketSize) - headerSize
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-	for n:=4; n < bodySize; n++{
-		b[n] = letterBytes[rand.Intn(len(letterBytes))]
+	for n:=headerSize; n < bodySize; n++{
+		packet[n] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	return b
+	return packet
+}
+
+func _makePacketData(packetId uint16, packetSize uint16) ([]byte, int) {
+	headerSize := 5
+	packet := make([]byte, packetSize)
+	binary.LittleEndian.PutUint16(packet[0:2], packetSize)
+	binary.LittleEndian.PutUint16(packet[2:4], packetId)
+
+	return packet, headerSize
 }
