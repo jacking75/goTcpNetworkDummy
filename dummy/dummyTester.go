@@ -17,9 +17,9 @@ func Start() {
 		tester.start_ConnectDisconnect()
 	case TEST_TYPE_SIMPLE_REPEAT_CONNECT_DISCONNECT:
 		tester.start_RepeatConnectDisconnect()
-	case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
+	case TEST_TYPE_ECHO_FIXED_DATA_SIZE, TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE:
 		fallthrough
-	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
+	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE, TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE:
 		fallthrough
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT:
 		fallthrough

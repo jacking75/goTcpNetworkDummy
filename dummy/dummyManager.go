@@ -105,16 +105,25 @@ func (tester *dummyManager) DoGoroutineCheckResult() {
 
 		utils.Logger.Info("test Completed !!!")
 
-		if testType == TEST_TYPE_SIMPLE_CONNECT_DISCONNECT {
-				utils.Logger.Info("TEST_TYPE_SIMPLE_CONNECT_DISCONNECT", zap.Int64("Connect Count", connectCount), zap.Int64("Connect fail Count", connectFailCount))
-		} else if testType == TEST_TYPE_SIMPLE_REPEAT_CONNECT_DISCONNECT {
-				utils.Logger.Info("TEST_TYPE_SIMPLE_REPEAT_CONNECT_DISCONNECT", zap.Int64("Connect Count", connectCount), zap.Int64("Connect fail Count", connectFailCount))
-		} else if testType == TEST_TYPE_ECHO_FIXED_DATA_SIZE {
+		switch testType {
+		case TEST_TYPE_SIMPLE_CONNECT_DISCONNECT:
+			utils.Logger.Info("TEST_TYPE_SIMPLE_CONNECT_DISCONNECT", zap.Int64("Connect Count", connectCount), zap.Int64("Connect fail Count", connectFailCount))
+		case TEST_TYPE_SIMPLE_REPEAT_CONNECT_DISCONNECT:
+			utils.Logger.Info("TEST_TYPE_SIMPLE_REPEAT_CONNECT_DISCONNECT", zap.Int64("Connect Count", connectCount), zap.Int64("Connect fail Count", connectFailCount))
+		case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
 			utils.Logger.Info("TEST_TYPE_ECHO_FIXED_DATA_SIZE")
-		} else if testType == TEST_TYPE_ECHO_VARIABLE_DATA_SIZE {
+		case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
 			utils.Logger.Info("TEST_TYPE_ECHO_VARIABLE_DATA_SIZE")
-		} else if testType == TEST_TYPE_ECHO_CONNECT_DISCONNECT {
+		case TEST_TYPE_ECHO_CONNECT_DISCONNECT:
 			utils.Logger.Info("TEST_TYPE_ECHO_CONNECT_DISCONNECT")
+		case TEST_TYPE_ECHO_CONNECT_DISCONNECT_RANDOM:
+			utils.Logger.Info("TEST_TYPE_ECHO_CONNECT_DISCONNECT_RANDOM")
+		case TEST_TYPE_ECHO_CONNECT_DISCONNECT_FROM_SERVER:
+			utils.Logger.Info("TEST_TYPE_ECHO_CONNECT_DISCONNECT_FROM_SERVER")
+		case TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE:
+			utils.Logger.Info("TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE")
+		case TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE:
+			utils.Logger.Info("TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE")
 		}
 
 		utils.Logger.Info("test Completed", zap.Int64("Echo Count", echoCount), zap.Int64("Success Count", success), zap.Int64("Fail Count", fail))

@@ -19,6 +19,8 @@ const (
 	TEST_TYPE_ECHO_CONNECT_DISCONNECT = 5// 연결-에코-끊기
 	TEST_TYPE_ECHO_CONNECT_DISCONNECT_RANDOM = 6// 연결-에코-끊기(랜덤)
 	TEST_TYPE_ECHO_CONNECT_DISCONNECT_FROM_SERVER = 7// 연결-에코-서버에서 끊기
+	TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE = 8 // 받기를 기다리지 않고 보내는 에코. 고정 길이 데이터
+	TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE = 9// 받기를 기다리지 않고 보내는 에코. 임의 크기 데이터
 )
 
 const (

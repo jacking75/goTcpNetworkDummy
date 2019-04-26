@@ -2,6 +2,7 @@
 package dummy
 
 import (
+	"runtime"
 	"sync/atomic"
 	"time"
 	"math/rand"
@@ -17,12 +18,11 @@ func (tester *dummyManager) start_Echo() {
 	defer utils.PrintPanicStack()
 
 	config := tester.config
-	isCountCheck := config.testCountPerDummy > 0
 
 	switch config.testCase {
-	case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
+	case TEST_TYPE_ECHO_FIXED_DATA_SIZE, TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE:
 		fallthrough
-	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
+	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE, TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE:
 		fallthrough
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT:
 		fallthrough
@@ -34,13 +34,13 @@ func (tester *dummyManager) start_Echo() {
 
 	//utils.Logger.Debug("start_Echo - start goroutine")
 	for i := range tester.dummyList {
-		go tester._DoGoroutine_Echo(i, config.remoteAddress, isCountCheck)
+		go tester._DoGoroutine_Echo(i, config.remoteAddress, config.testCase)
 	}
 
 	go tester.DoGoroutineCheckResult()
 }
 
-func (tester *dummyManager) _DoGoroutine_Echo(dummyIndex int, remoteAddress string, isCountCheck bool) {
+func (tester *dummyManager) _DoGoroutine_Echo(dummyIndex int, remoteAddress string, testCase int) {
 	//utils.Logger.Debug("_DoGoroutine_Echo")
 	defer utils.PrintPanicStack()
 
@@ -50,6 +50,11 @@ func (tester *dummyManager) _DoGoroutine_Echo(dummyIndex int, remoteAddress stri
 		atomic.AddInt64(&tester.successCount, 1)
 	} else {
 		atomic.AddInt64(&tester.failCount, 1)
+	}
+
+	// 에코인데 받지 않고 막 보내는 타입은 작업을 양보한다. 그렇지 않고 막보내면 패킷이 뭉쳐서 서버로 보내지게될 확률이 높다
+	if testCase == TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE || testCase == TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE {
+		runtime.Gosched()
 	}
 }
 
@@ -122,9 +127,9 @@ func (tester *dummyManager) _selectPacket(config dummytestConfig, lot lottery.Lo
 	var sendData []byte
 
 	switch testCase {
-	case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
+	case TEST_TYPE_ECHO_FIXED_DATA_SIZE, TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE:
 		fallthrough
-	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
+	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE, TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE:
 		fallthrough
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT:
 		fallthrough

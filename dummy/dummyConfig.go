@@ -67,14 +67,14 @@ func checkConfigData(tester *dummyManager) int {
 	}
 
 	switch config.testCase {
-	case TEST_TYPE_ECHO_FIXED_DATA_SIZE:
+	case TEST_TYPE_ECHO_FIXED_DATA_SIZE, TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE:
 		{
 			if config.minSendData != config.maxSendData {
 				utils.Logger.Error("Echo", zap.Int("MinSize", config.minSendData), zap.Int("MaxSize", config.maxSendData))
 				return DUMMY_TEST_ERROR_ECHO_DATA_SIZE
 			}
 		}
-	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE:
+	case TEST_TYPE_ECHO_VARIABLE_DATA_SIZE, TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE:
 		{
 			if config.minSendData == config.maxSendData {
 				utils.Logger.Error("Echo", zap.Int("MinSize", config.minSendData), zap.Int("MaxSize", config.maxSendData))

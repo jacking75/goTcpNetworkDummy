@@ -1,7 +1,6 @@
 package dummy
 
 import (
-	"dancevilleparkserver/autoTest/dummy"
 	"go.uber.org/zap"
 	"net"
 
@@ -11,8 +10,6 @@ import (
 // 에코 - 접속 후 데이터를 보내고 받는다. 중간에 접속이 끊어지지 않는다.
 func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sendData []byte, sendPacketQueue *Deque) int {
 	LOG_DEBUG("connectAndEchoWithoutReceive Start", zap.String("Dummy", dummy.nameToString()))
-
-	var errorCode = NET_ERROR_NONE
 
 	if dummy.conn == nil {
 		LOG_DEBUG("connectAndEchoWithoutReceive. Connect", zap.String("Dummy",dummy.nameToString()))
@@ -25,12 +22,16 @@ func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sen
 		}
 
 		//golang은 Nagle 알고리즘이 기본은 off
-		go _echoReceive_goroutine(dummy.nameToString(), dummy.conn, dummy.recvBuffer, sendPacketQueue, &errorCode)
-
-		LOG_DEBUG("connectAndEchoWithoutReceive. Init", zap.String("Dummy",dummy.nameToString()))
+		go _echoReceive_goroutine(dummy.nameToString(), dummy.conn, dummy.recvBuffer, sendPacketQueue)
 	}
-	//utils.Logger.Debug("connectAndEchoWithoutReceive. Connect, Init")
 
+	if _receiveErrorCode != NET_ERROR_NONE {
+		socketClose(dummy)
+		return _receiveErrorCode
+	}
+
+
+	sendPacketQueue.Append(sendData)
 
 	sendSize := len(sendData)
 	writeBytes, err1 := dummy.conn.Write(sendData)
@@ -47,65 +48,82 @@ func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sen
 		return NET_ERROR_ERROR_SEND_DIFF_SIZE
 	}
 
-	sendPacketQueue.Append(sendData)
+	return NET_ERROR_NONE
+}
+
+func _echoReceive_goroutine(dummyName string, conn *net.TCPConn, recvBuffer []byte, sendPacketQueue *Deque) {
+	//LOG_DEBUG("_echoReceive_goroutine. start")
+	recvStartPos := 0
+
+	for {
+		readAbleBytes, err := conn.Read(recvBuffer[recvStartPos:])
+		//LOG_DEBUG("_echoReceive_goroutine. read end")
+
+		_receiveErrorCode = _checkReadError(dummyName, readAbleBytes, err)
+		if _receiveErrorCode != NET_ERROR_NONE {
+			conn.Close()
+			return
+		}
 
 
-	if errorCode != NET_ERROR_NONE {
-		return errorCode
+		readAbleBytes += recvStartPos
+		recvStartPos, _receiveErrorCode = _checkReceiveData(readAbleBytes, sendPacketQueue, recvBuffer)
+
+		if _receiveErrorCode != NET_ERROR_NONE {
+			conn.Close()
+			return
+		}
+	}
+}
+
+
+var _receiveErrorCode int = NET_ERROR_NONE
+
+func _checkReadError(dummyName string, readAbleBytes int, netErr error) int {
+	if readAbleBytes == 0 {
+		return NET_ERROR_ERROR_DISCONNECTED
+	}
+
+	if netErr != nil {
+		LOG_ERROR("Tcp Read error", zap.String("Dummy", dummyName), zap.Error(netErr))
+		return NET_ERROR_ERROR_RECV
 	}
 
 	return NET_ERROR_NONE
 }
 
-func _echoReceive_goroutine(dummyName string, conn *net.TCPConn, recvBuffer []byte, sendPacketQueue *Deque, errorCode *int) {
-	//LOG_DEBUG("_echoReceive_goroutine. start")
-	recvPos := 0
+func _checkReceiveData(readAbleBytes int, sendPacketQueue *Deque, recvBuffer []byte) (int, int) {
+	readBufferPos := 0
+	recvStartPos := 0
+	errorCode := NET_ERROR_NONE
 
 	for {
-		recvBytes, err2 := conn.Read(recvBuffer[recvPos:])
-		//LOG_DEBUG("_echoReceive_goroutine. read end")
-		if recvBytes == 0 {
-			*errorCode = NET_ERROR_ERROR_DISCONNECTED
-			conn.Close()
-			return
+		if readAbleBytes <= 0 {
+			break
 		}
 
-		if err2 != nil {
-			LOG_ERROR("Tcp Read error", zap.String("Dummy", dummyName), zap.Error(err2))
-			*errorCode = NET_ERROR_ERROR_RECV
-			conn.Close()
-			return
+		sendPacket := sendPacketQueue.Shift().([]byte)
+		sendPacketSize := len(sendPacket)
+
+		if sendPacketSize > readAbleBytes {
+			sendPacketQueue.Prepend(sendPacket)
+			break
 		}
 
-		recvBytes += recvPos
-		readBufferPos := 0
-
-		// 패킷 분해
-		for {
-			sendPacket := sendPacketQueue.Pop()
-			sendPacketSize := len(sendPacket.([]byte))
-
-			if sendPacketSize == recvBytes {
-				recvPos = 0
-				break
-			} else if sendPacketSize < recvBytes {
-				recvBytes -= sendPacketSize
-				readBufferPos += recvBytes
-			} else {
-				sendPacketQueue.Append(sendPacket)
-				recvPos = recvBytes
-				break
-			}
+		if sendPacket[0] != recvBuffer[readBufferPos] ||
+			sendPacket[sendPacketSize-1] != recvBuffer[readBufferPos+sendPacketSize-1] {
+			return recvStartPos, NET_ERROR_ERROR_DISCONNECTED
 		}
 
-
-		if sendData[8] != dummy.recvBuffer[8] || sendData[8] != dummy.recvBuffer[8] {
-			return//NET_ERROR_ERROR_SEND_RECV_DIFF_DATA
-		}
-
-		//TODO 보낸 데이터와 받는 데이터가 같은지 검증하기
-		//LOG_DEBUG("connectAndEcho. send-receive data Size:", sendSize)
+		readAbleBytes -= sendPacketSize
+		readBufferPos += sendPacketSize
 	}
-}
 
+	if readAbleBytes > 0 {
+		copy(recvBuffer, recvBuffer[readBufferPos:(readBufferPos+ readAbleBytes)])
+	}
+
+	recvStartPos = readAbleBytes
+	return recvStartPos, errorCode
+}
 
