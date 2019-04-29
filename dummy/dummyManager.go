@@ -22,6 +22,8 @@ type dummyObject struct {
 	echoCount int64 // 에코한 횟수
 
 	recvBuffer []byte // 네트워크 받기 버퍼
+
+	sendPacketQueue *utils.Deque
 }
 
 // 더미의 이름 문자열
@@ -77,6 +79,11 @@ func init_dummyManager(config dummytestConfig) *dummyManager {
 
 		if config.maxSendData > 0 {
 			tester.dummyList[i].recvBuffer = make([]byte, (config.maxSendData+32))
+		}
+
+		if config.testCase == TEST_TYPE_ECHO_EX_FIXED_DATA_SIZE ||
+			config.testCase == TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE {
+			tester.dummyList[i].sendPacketQueue = utils.NewCappedDeque(256)
 		}
 	}
 

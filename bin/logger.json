@@ -14,7 +14,7 @@
     "callerEncoder": "short"
   },
   "outputPaths": [
-    "stdout"
+    "stdout", "result.log"
   ],
   "errorOutputPaths": [
     "stderr"

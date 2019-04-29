@@ -63,7 +63,7 @@ func (dummy *dummyObject) connectAndEcho(remoteAddress string, sendData []byte) 
 	}
 
 	//TODO 보낸 데이터와 받는 데이터가 같은지 검증하기
-	//LOG_DEBUG("connectAndEcho. send-receive data Size:", sendSize)
+	LOG_DEBUG("connectAndEcho. send-receive: ", zap.Int("sendSize", sendSize))
 	return NET_ERROR_NONE
 }
 

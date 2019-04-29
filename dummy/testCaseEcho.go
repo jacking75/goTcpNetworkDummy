@@ -81,8 +81,13 @@ func (tester *dummyManager) _Echo(dummyIndex int, remoteAddress string,
 
 	for {
 		sendData := tester._selectPacket(config, serverDisconnRandom, serverDisconnFlag)
+		var result int
 
-		result := dummy.connectAndEcho(remoteAddress, sendData)
+		if dummy.sendPacketQueue == nil {
+			result = dummy.connectAndEcho(remoteAddress, sendData)
+		} else {
+			result = dummy.connectAndEchoWithoutReceive(remoteAddress, sendData)
+		}
 
 		if _checkErrorEnableContinue(config.testCase, result) == false {
 			utils.Logger.Info("_Echo", zap.Int("Error", result))

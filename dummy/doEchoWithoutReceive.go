@@ -8,7 +8,7 @@ import (
 )
 
 // 에코 - 접속 후 데이터를 보내고 받는다. 중간에 접속이 끊어지지 않는다.
-func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sendData []byte, sendPacketQueue *Deque) int {
+func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sendData []byte) int {
 	LOG_DEBUG("connectAndEchoWithoutReceive Start", zap.String("Dummy", dummy.nameToString()))
 
 	if dummy.conn == nil {
@@ -22,7 +22,7 @@ func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sen
 		}
 
 		//golang은 Nagle 알고리즘이 기본은 off
-		go _echoReceive_goroutine(dummy.nameToString(), dummy.conn, dummy.recvBuffer, sendPacketQueue)
+		go _echoReceive_goroutine(dummy.nameToString(), dummy.conn, dummy.recvBuffer, dummy.sendPacketQueue)
 	}
 
 	if _receiveErrorCode != NET_ERROR_NONE {
@@ -31,7 +31,7 @@ func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sen
 	}
 
 
-	sendPacketQueue.Append(sendData)
+	dummy.sendPacketQueue.Append(sendData)
 
 	sendSize := len(sendData)
 	writeBytes, err1 := dummy.conn.Write(sendData)
@@ -52,7 +52,7 @@ func (dummy *dummyObject) connectAndEchoWithoutReceive(remoteAddress string, sen
 }
 
 func _echoReceive_goroutine(dummyName string, conn *net.TCPConn, recvBuffer []byte, sendPacketQueue *Deque) {
-	//LOG_DEBUG("_echoReceive_goroutine. start")
+	LOG_DEBUG("_echoReceive_goroutine. start")
 	recvStartPos := 0
 
 	for {
