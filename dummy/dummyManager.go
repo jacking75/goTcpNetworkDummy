@@ -95,6 +95,7 @@ func init_dummyManager(config dummytestConfig) *dummyManager {
 func (tester *dummyManager) DoGoroutineCheckResult() {
 	defer utils.PrintPanicStack()
 
+	testStartTime := time.Now()
 	testType := tester.config.testCase
 	var dummyCount int64 = int64(tester.config.dummyCount)
 
@@ -133,7 +134,8 @@ func (tester *dummyManager) DoGoroutineCheckResult() {
 			utils.Logger.Info("TEST_TYPE_ECHO_EX_VARIABLE_DATA_SIZE")
 		}
 
-		utils.Logger.Info("test Completed", zap.Int64("Echo Count", echoCount), zap.Int64("Success Count", success), zap.Int64("Fail Count", fail))
+		testTime := time.Now().Sub(testStartTime)
+		utils.Logger.Info("test Completed", zap.Int64("Echo Count", echoCount), zap.Int64("Success Count", success), zap.Int64("Fail Count", fail), zap.Duration("Time spent", testTime))
 
 		tester.chDoneEnd <- struct{}{}
 		return

@@ -29,7 +29,7 @@ func (tester *dummyManager) start_Echo() {
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT_RANDOM:
 		tester.sendDataList = makeRandomPacketList(config.sendDataKindCount, config.minSendData, config.maxSendData)
 	case TEST_TYPE_ECHO_CONNECT_DISCONNECT_FROM_SERVER:
-		tester.sendDataList = makePackets_Normal_ReqDisConn_Both(config.maxSendData)
+		tester.sendDataList = makePackets_Normal_ReqDisConn_Both(config.minSendData, config.maxSendData)
 	}
 
 	//utils.Logger.Debug("start_Echo - start goroutine")

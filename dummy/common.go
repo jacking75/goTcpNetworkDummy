@@ -31,6 +31,10 @@ const (
 	DUMMY_TEST_ERROR_ECHO_CONNECT_DISCONNECT_SERVER_RANDOMPER = 4
 )
 
+const PACKET_HEADER_SZIE = 5
+
+var ECHO_PACKET_ID uint16 = 101
+var ECHO_REQ_DISCONNECT_PACKET_ID uint16 = 103
 
 func global_randNumber(maxNumber int) int {
 	return rand.Intn(maxNumber)
@@ -66,17 +70,17 @@ func makeRandomPacketList(row int, minSize int, maxSize int) [][]byte {
 }
 
 // 보통 패킷, 연결 종료 요청 패킷, 보통+연결종료요청 2개 합쳐진 패킷 을 만든다.
-func makePackets_Normal_ReqDisConn_Both(size int) [][]byte {
+func makePackets_Normal_ReqDisConn_Both(minSize int, maxSize int) [][]byte {
 	binaryDatas := make([][]byte, 3)
 
-	binaryDatas[0] = _randomBytes(size, size)
-	binaryDatas[1] = _requestDisconnecPacketBytes(16, 4)
+	binaryDatas[0] = _randomBytes(minSize, maxSize)
+	binaryDatas[1] = _requestDisconnecPacketBytes(ECHO_REQ_DISCONNECT_PACKET_ID, PACKET_HEADER_SZIE)
 
 	binaryDatas[2] = make([]byte, (len(binaryDatas[0])+len(binaryDatas[1])))
 	binaryDatas[2] = append(binaryDatas[2], binaryDatas[0]...)
 	binaryDatas[2] = append(binaryDatas[2], binaryDatas[1]...)
 
-	utils.Logger.Info("makePackets_Normal_ReqDisConn_Both", zap.Int("Row", 3), zap.Int("Size", size))
+	utils.Logger.Info("makePackets_Normal_ReqDisConn_Both", zap.Int("Row", 3), zap.Int("minSize", minSize), zap.Int("maxSize", maxSize))
 	return binaryDatas
 }
 
@@ -103,7 +107,7 @@ func _randomBytes(minSize int, maxSize int) []byte {
 		size = maxSize
 	}
 
-	var packetId uint16 = 101
+	packetId := ECHO_PACKET_ID
 	packet, headerSize := _makePacketData(packetId, uint16(size))
 
 	for n:=headerSize; n < size; n++{
@@ -113,8 +117,8 @@ func _randomBytes(minSize int, maxSize int) []byte {
 	return packet
 }
 
-func _requestDisconnecPacketBytes(packetId int16, totalPacketSize int16) []byte {
-	packet, headerSize := _makePacketData(uint16(packetId), uint16(totalPacketSize))
+func _requestDisconnecPacketBytes(packetId uint16, totalPacketSize uint16) []byte {
+	packet, headerSize := _makePacketData(packetId, totalPacketSize)
 	bodySize := (int)(totalPacketSize) - headerSize
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -126,7 +130,7 @@ func _requestDisconnecPacketBytes(packetId int16, totalPacketSize int16) []byte 
 }
 
 func _makePacketData(packetId uint16, packetSize uint16) ([]byte, int) {
-	headerSize := 5
+	headerSize := PACKET_HEADER_SZIE
 	packet := make([]byte, packetSize)
 	binary.LittleEndian.PutUint16(packet[0:2], packetSize)
 	binary.LittleEndian.PutUint16(packet[2:4], packetId)
