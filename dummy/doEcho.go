@@ -20,7 +20,11 @@ func (dummy *dummyObject) connectAndEcho(remoteAddress string, sendData []byte) 
 			break
 		}
 	}
-	//utils.Logger.Debug("ConnectAndEcho. Complete")
+
+	/*packetId := binary.LittleEndian.Uint16(sendData[2:4])
+	if packetId == ECHO_REQ_DISCONNECT_PACKET_ID {
+		LOG_INFO("send ECHO_REQ_DISCONNECT_PACKET_ID", zap.String("Dummy", dummy.nameToString()))
+	}*/
 
 	sendSize := len(sendData)
 	writeBytes, err1 := dummy.conn.Write(sendData)
@@ -41,6 +45,7 @@ func (dummy *dummyObject) connectAndEcho(remoteAddress string, sendData []byte) 
 	recvBytes, err2 := dummy.conn.Read(dummy.recvBuffer)
 	//LOG_DEBUG("ConnectAndEcho. read end")
 	if recvBytes == 0 {
+		//LOG_DEBUG("Closed. ConnectAndEcho", zap.String("Dummy", dummy.nameToString()))
 		socketClose(dummy)
 		return NET_ERROR_ERROR_DISCONNECTED
 	}
@@ -58,7 +63,7 @@ func (dummy *dummyObject) connectAndEcho(remoteAddress string, sendData []byte) 
 		return NET_ERROR_ERROR_SEND_RECV_DIFF_SIZE
 	}
 
-	if sendData[8] != dummy.recvBuffer[8] || sendData[8] != dummy.recvBuffer[8] {
+	if sendData[0] != dummy.recvBuffer[0] || sendData[sendSize-1] != dummy.recvBuffer[sendSize-1] {
 		return NET_ERROR_ERROR_SEND_RECV_DIFF_DATA
 	}
 
