@@ -2,6 +2,7 @@
 package dummy
 
 import (
+	"fmt"
 	"sync/atomic"
 	"time"
 
@@ -17,7 +18,15 @@ func (tester *dummyManager) start_RepeatConnectDisconnect() {
 	isCountCheck := config.testCountPerDummy > 0
 
 	for i := range tester.dummyList {
-		go tester._DoGoroutine_RepeatConnectDisconnect(i, config.remoteAddress, isCountCheck)
+		var remoteAddress string
+
+		if config.isPortByDummy == false {
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
+		} else {
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + i))
+		}
+
+		go tester._DoGoroutine_RepeatConnectDisconnect(i, remoteAddress, isCountCheck)
 	}
 
 	go tester.DoGoroutineCheckResult()

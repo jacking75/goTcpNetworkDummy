@@ -9,7 +9,10 @@ import (
 
 // 더미 테스트에 사용할 설정 정보
 type dummytestConfig struct {
-	remoteAddress string // 접속할 서버 주소
+	remoteIP string // 접속할 서버 IP
+	remotePort int // 접속할 서버 Port
+	isPortByDummy bool // 더미별로 포트 번호를 별도
+
 	dummyCount int // 더미 개수
 
 	testCase int // 테스트 타입
@@ -26,7 +29,10 @@ type dummytestConfig struct {
 
 func loadConfig() dummytestConfig {
 	config := dummytestConfig{}
-	flag.StringVar(&config.remoteAddress,"c_remoteAddress", "127.0.0.1:11021", "string flag")
+	flag.StringVar(&config.remoteIP,"c_remoteIP", "127.0.0.1", "string flag")
+	flag.IntVar(&config.remotePort,"c_remotePort", 11021, "int flag")
+	flag.BoolVar(&config.isPortByDummy,"c_isPortByDummy", false, "bool flag")
+
 	flag.IntVar(&config.dummyCount,"c_dummyCount", 0, "int flag")
 	flag.IntVar(&config.testCase,"c_testCase", 0, "int flag")
 	flag.Int64Var(&config.testCountPerDummy,"c_testCountPerDummy", 0, "int flag")
@@ -45,7 +51,9 @@ func loadConfig() dummytestConfig {
 // 더미 테스트 설정 정보를 출력한다
 func _configValueWriteLogger(config dummytestConfig) {
 	utils.Logger.Info("init_dummyManager")
-	utils.Logger.Info("config", zap.String("Server Address", config.remoteAddress))
+	utils.Logger.Info("config", zap.String("Server IP", config.remoteIP))
+	utils.Logger.Info("config", zap.Int("Server Port: ", config.remotePort))
+	utils.Logger.Info("config", zap.Bool("isPortByDummy: ", config.isPortByDummy))
 	utils.Logger.Info("config", zap.Int("DummyCount: ", config.dummyCount))
 	utils.Logger.Info("config", zap.Int("Test Case: ", config.testCase))
 	utils.Logger.Info("config", zap.Int64("testCountPerDummy: ", config.testCountPerDummy))

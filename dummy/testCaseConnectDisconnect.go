@@ -2,6 +2,7 @@
 package dummy
 
 import (
+	"fmt"
 	"sync/atomic"
 
 	"go.uber.org/zap"
@@ -27,7 +28,16 @@ func (tester *dummyManager) DoGoroutine(dummyIndex int) {
 	defer utils.PrintPanicStack()
 
 	config := tester.config
-	result := tester.dummyList[dummyIndex].connectAndFailthenSleep(config.remoteAddress)
+
+	var remoteAddress string
+
+	if config.isPortByDummy == false {
+		remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
+	} else {
+		remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + dummyIndex))
+	}
+
+	result := tester.dummyList[dummyIndex].connectAndFailthenSleep(remoteAddress)
 
 	if result {
 		atomic.AddInt64(&tester.successCount, 1)

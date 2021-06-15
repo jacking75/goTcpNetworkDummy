@@ -2,6 +2,7 @@
 package dummy
 
 import (
+	"fmt"
 	"math/rand"
 	"runtime"
 	"sync/atomic"
@@ -34,7 +35,14 @@ func (tester *dummyManager) start_Echo() {
 
 	utils.Logger.Info("start_Echo - start goroutine")
 	for i := range tester.dummyList {
-		go tester._DoGoroutine_Echo(i, config.remoteAddress, config.testCase)
+		var remoteAddress string
+
+		if config.isPortByDummy == false {
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
+		} else {
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + i))
+		}
+		go tester._DoGoroutine_Echo(i, remoteAddress, config.testCase)
 	}
 
 	go tester.DoGoroutineCheckResult()
