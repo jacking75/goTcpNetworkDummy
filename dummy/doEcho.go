@@ -3,7 +3,7 @@ package dummy
 import (
 	"go.uber.org/zap"
 
-	. "goTcpNetworkDummy/utils"
+	. "main/utils"
 )
 
 // 에코 - 접속 후 데이터를 보내고 받는다

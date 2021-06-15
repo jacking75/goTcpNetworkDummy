@@ -4,7 +4,7 @@ import (
 	"go.uber.org/zap"
 	"net"
 
-	. "goTcpNetworkDummy/utils"
+	. "main/utils"
 )
 
 // 에코 - 접속 후 데이터를 보내고 받는다. 중간에 접속이 끊어지지 않는다.

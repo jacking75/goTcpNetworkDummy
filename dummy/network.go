@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	. "goTcpNetworkDummy/utils"
+	. "main/utils"
 )
 
 // 네트워크 관련 에커 코드 선언

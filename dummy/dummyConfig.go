@@ -4,7 +4,7 @@ import (
 	"flag"
 	"go.uber.org/zap"
 
-	"goTcpNetworkDummy/utils"
+	"main/utils"
 )
 
 // 더미 테스트에 사용할 설정 정보

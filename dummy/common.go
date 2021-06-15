@@ -1,13 +1,13 @@
 package dummy
 
 import (
+	"encoding/binary"
 	"math/rand"
 	"time"
-	"encoding/binary"
 
 	"go.uber.org/zap"
 
-	"goTcpNetworkDummy/utils"
+	"main/utils"
 )
 
 

@@ -2,15 +2,15 @@
 package dummy
 
 import (
+	"math/rand"
 	"runtime"
 	"sync/atomic"
 	"time"
-	"math/rand"
 
 	"github.com/kyokomi/lottery"
 	"go.uber.org/zap"
 
-	"goTcpNetworkDummy/utils"
+	"main/utils"
 )
 
 func (tester *dummyManager) start_Echo() {
@@ -32,7 +32,7 @@ func (tester *dummyManager) start_Echo() {
 		tester.sendDataList = makePackets_Normal_ReqDisConn_Both(config.minSendData, config.maxSendData)
 	}
 
-	//utils.Logger.Debug("start_Echo - start goroutine")
+	utils.Logger.Info("start_Echo - start goroutine")
 	for i := range tester.dummyList {
 		go tester._DoGoroutine_Echo(i, config.remoteAddress, config.testCase)
 	}
