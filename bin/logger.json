@@ -1,5 +1,5 @@
 {
-  "level": "debug",
+  "level": "info",
   "encoding": "json",
   "encoderConfig": {
     "messageKey": "Msg",
