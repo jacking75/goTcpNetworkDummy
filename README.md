@@ -60,30 +60,20 @@ Echo 패킷의 packetId는 101 번이다.
   ]
 ```
   
-#### .env
-
+#### cmd argument
+실행 예(Windows)  
 ```
-remoteAddress = "127.0.0.1:32452"
-dummyCount = 1
-testCase = 6
-testCountPerDummy = 2
-testTimeSecondPerDummy = 0
-sendDataKindCount = 8
-minSendData = 20
-maxSendData = 50
-echoConnectDisconnectRandomPer = 50
-echoConnectDisconnectServerRandomPer = 50
+goTcpNetDummy.exe -c_remoteAddress=127.0.0.1:11021 -c_dummyCount=64 -c_testCase=7 -c_testCountPerDummy=64 -c_testTimeSecondPerDummy=0 -c_sendDataKindCount=8 -c_minSendData=20 -c_maxSendData=50 -c_echoConnectDisconnectRandomPer=50 -c_echoConnectDisconnectServerRandomPer=50
 ```
-  
-- remoteAddress : 접속할 서버 주소
-- dummyCount : 더미 개수
-- testCase : 위의 테스트 항목의 번호에 대응한다
-- testCountPerDummy : 반복 기준을 횟수로 한다. 
-- testTimeSecondPerDummy가 0 보다 크면 시간 기준을 우선한다.
-- testTimeSecondPerDummy : 반복 기준을 시간(초 단위)으로 한다.
-- sendDataKindCount : Echo에 사용할 더미 데이터 종류 수
-- minSendData : Echo에 사용할 데이터의 최소 길이
-- maxSendData : Echo에 사용할 데이터의 최대 길이
-- echoConnectDisconnectRandomPer : Echo 하면서 연결을 랜덤하게 끊는 경우 끊을 확률(1~100)
-- echoConnectDisconnectServerRandomPer : Echo 하면서 서버에서 연결을 랜덤하게 끊는 경우 끊을 확률(1~100)  
+    
+- c_remoteAddress : 접속할 서버 주소
+- c_dummyCount : 더미 개수
+- c_testCase : 위의 테스트 항목의 번호에 대응한다
+- c_testCountPerDummy : 반복 기준을 횟수로 한다. 
+- c_testTimeSecondPerDummy: 반복 기준을 시간(초 단위)으로 한다. 0 보다 크면 시간 기준을 우선한다.
+- c_sendDataKindCount : Echo에 사용할 더미 데이터 종류 수
+- c_minSendData : Echo에 사용할 데이터의 최소 길이
+- c_maxSendData : Echo에 사용할 데이터의 최대 길이
+- c_echoConnectDisconnectRandomPer : Echo 하면서 연결을 랜덤하게 끊는 경우 끊을 확률(1~100)
+- c_echoConnectDisconnectServerRandomPer : Echo 하면서 서버에서 연결을 랜덤하게 끊는 경우 끊을 확률(1~100)  
   

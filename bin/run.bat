@@ -1,1 +1,1 @@
-goTcpNetDummy.exe -c_remoteAddress=127.0.0.1:11021 -c_dummyCount=64 -c_testCase=7 -c_testCountPerDummy=64 -c_testTimeSecondPerDummy=0 -c_sendDataKindCount=8 -c_minSendData=20 -c_maxSendData=50 -c_echoConnectDisconnectRandomPer=50 -c_echoConnectDisconnectServerRandomPer=50
+echoDummy.exe -c_remoteAddress=127.0.0.1:11021 -c_dummyCount=64 -c_testCase=3 -c_testCountPerDummy=0 -c_testTimeSecondPerDummy=10 -c_sendDataKindCount=7 -c_minSendData=100 -c_maxSendData=100 -c_echoConnectDisconnectRandomPer=0 -c_echoConnectDisconnectServerRandomPer=0
