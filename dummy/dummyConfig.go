@@ -12,6 +12,7 @@ type dummytestConfig struct {
 	remoteIP string // 접속할 서버 IP
 	remotePort int // 접속할 서버 Port
 	isPortByDummy bool // 더미별로 포트 번호를 별도
+	samePortDummyCount int // isPortByDummy를 사용할 때 같은 포트에 접속할 더미 수
 
 	dummyCount int // 더미 개수
 
@@ -32,6 +33,7 @@ func loadConfig() dummytestConfig {
 	flag.StringVar(&config.remoteIP,"c_remoteIP", "127.0.0.1", "string flag")
 	flag.IntVar(&config.remotePort,"c_remotePort", 11021, "int flag")
 	flag.BoolVar(&config.isPortByDummy,"c_isPortByDummy", false, "bool flag")
+	flag.IntVar(&config.samePortDummyCount,"c_samePortDummyCount", 1, "int flag")
 
 	flag.IntVar(&config.dummyCount,"c_dummyCount", 0, "int flag")
 	flag.IntVar(&config.testCase,"c_testCase", 0, "int flag")

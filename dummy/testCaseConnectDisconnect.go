@@ -34,7 +34,8 @@ func (tester *dummyManager) DoGoroutine(dummyIndex int) {
 	if config.isPortByDummy == false {
 		remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
 	} else {
-		remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + dummyIndex))
+		port := dummyIndex / config.samePortDummyCount
+		remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + port))
 	}
 
 	result := tester.dummyList[dummyIndex].connectAndFailthenSleep(remoteAddress)

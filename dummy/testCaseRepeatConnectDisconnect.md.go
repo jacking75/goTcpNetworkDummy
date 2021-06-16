@@ -23,7 +23,8 @@ func (tester *dummyManager) start_RepeatConnectDisconnect() {
 		if config.isPortByDummy == false {
 			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
 		} else {
-			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + i))
+			port := i / config.samePortDummyCount
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + port))
 		}
 
 		go tester._DoGoroutine_RepeatConnectDisconnect(i, remoteAddress, isCountCheck)

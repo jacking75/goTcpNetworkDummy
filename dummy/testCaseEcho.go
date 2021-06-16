@@ -40,7 +40,8 @@ func (tester *dummyManager) start_Echo() {
 		if config.isPortByDummy == false {
 			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, config.remotePort)
 		} else {
-			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + i))
+			port := i / config.samePortDummyCount
+			remoteAddress = fmt.Sprintf("%s:%d", config.remoteIP, (config.remotePort + port))
 		}
 		go tester._DoGoroutine_Echo(i, remoteAddress, config.testCase)
 	}
